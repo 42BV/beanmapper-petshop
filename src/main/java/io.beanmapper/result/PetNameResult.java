@@ -6,4 +6,6 @@ public class PetNameResult {
 
     @BeanProperty(name = "nickname")
     public String name;
+    @BeanProperty(name = "type.type")
+    public String type;
 }
