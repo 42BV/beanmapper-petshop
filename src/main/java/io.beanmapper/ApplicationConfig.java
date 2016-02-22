@@ -1,9 +1,9 @@
 package io.beanmapper;
 
 import io.beanmapper.config.BeanMapperBuilder;
-import io.beanmapper.config.CustomIdToEntityBeanConverter;
 import io.beanmapper.config.WebMvcConfig;
 import io.beanmapper.spring.unproxy.HibernateAwareBeanUnproxy;
+import io.beanmapper.support.CustomIdToEntityBeanConverter;
 import org.hibernate.cfg.ImprovedNamingStrategy;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.jpa.HibernatePersistenceProvider;

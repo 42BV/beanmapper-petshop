@@ -1,10 +1,13 @@
 package io.beanmapper.builders;
 
+import io.beanmapper.model.Owner;
 import io.beanmapper.model.Pet;
 import io.beanmapper.model.PetType;
 import io.beanmapper.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
 
 @Component
 public class PetBuilder extends AbstractBuilder<Pet> {
@@ -19,8 +22,8 @@ public class PetBuilder extends AbstractBuilder<Pet> {
         return this;
     }
 
-    public PetBuilder age(int age) {
-        entity.setAge(age);
+    public PetBuilder birthDate(LocalDate birthDate) {
+        entity.setBirthDate(birthDate);
         return this;
     }
 
@@ -31,6 +34,11 @@ public class PetBuilder extends AbstractBuilder<Pet> {
 
     public PetBuilder type(PetType petType) {
         entity.setType(petType);
+        return this;
+    }
+
+    public PetBuilder owner(Owner owner) {
+        entity.setOwner(owner);
         return this;
     }
 }

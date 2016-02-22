@@ -2,6 +2,7 @@ package io.beanmapper.model;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import java.time.LocalDate;
 
 @Entity
 public class Pet extends BaseModel {
@@ -22,10 +23,12 @@ public class Pet extends BaseModel {
     }
 
     private String nickname;
-    private int age;
+    private LocalDate birthDate;
     private Sex sex;
     @ManyToOne
     private PetType type;
+    @ManyToOne
+    private Owner owner;
 
     public String getNickname() {
         return nickname;
@@ -35,12 +38,12 @@ public class Pet extends BaseModel {
         this.nickname = nickname;
     }
 
-    public int getAge() {
-        return age;
+    public LocalDate getBirthDate() {
+        return birthDate;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 
     public Sex getSex() {
@@ -57,5 +60,13 @@ public class Pet extends BaseModel {
 
     public void setType(PetType type) {
         this.type = type;
+    }
+
+    public Owner getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Owner owner) {
+        this.owner = owner;
     }
 }

@@ -1,4 +1,4 @@
-package io.beanmapper.config;
+package io.beanmapper.support;
 
 import io.beanmapper.core.BeanFieldMatch;
 import io.beanmapper.core.converter.BeanConverter;

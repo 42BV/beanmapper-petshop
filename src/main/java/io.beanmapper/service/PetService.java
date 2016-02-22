@@ -5,6 +5,7 @@ import io.beanmapper.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -18,6 +19,10 @@ public class PetService {
 
     public Pet findOne(Long id) {
         return petRepository.findOne(id);
+    }
+
+    public List<Pet> findByType(String type) {
+        return petRepository.findByTypeTypeIgnoreCase(type);
     }
 
     public Pet save(Pet pet) {

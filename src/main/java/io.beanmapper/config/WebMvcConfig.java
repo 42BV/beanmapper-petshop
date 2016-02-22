@@ -2,10 +2,13 @@ package io.beanmapper.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.beanmapper.ApplicationConfig;
 import io.beanmapper.BeanMapper;
 import io.beanmapper.spring.web.MergedFormMethodArgumentResolver;
 import io.beanmapper.spring.web.converter.StructuredJsonMessageConverter;
+import io.beanmapper.support.JsonDateDeserializer;
+import io.beanmapper.support.JsonDateSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +29,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -64,6 +68,10 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(LocalDate.class, new JsonDateSerializer());
+        module.addDeserializer(LocalDate.class, new JsonDateDeserializer());
+        mapper.registerModule(module);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         return mapper;
     }
