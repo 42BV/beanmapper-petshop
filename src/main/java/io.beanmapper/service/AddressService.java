@@ -15,4 +15,16 @@ public class AddressService {
     public List<Address> findAll() {
         return addressRepository.findAll();
     }
+
+    public Address findOne(Long id) {
+        return addressRepository.findOne(id);
+    }
+
+    public Address save(Address Address) {
+        return addressRepository.save(Address);
+    }
+
+    public void delete(Long id) {
+        addressRepository.delete(id);
+    }
 }

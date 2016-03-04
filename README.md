@@ -12,6 +12,6 @@ Sample Spring project for the BeanMapper libraries
 Provide data for POST, PUT, PATCH request:
 
 ```
--H 'Content-Type: application/json'
---data '{"nickname": "Graver", "age": 5, "sex": "MALE", "petTypeId": 2}'
+-H 'Content-Type: application/json' 
+--data '{"nickname": "Graver", "birthDate": "2015-01-01", "sex": "MALE", "petTypeId": 2}'
 ```

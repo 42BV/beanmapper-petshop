@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.beanmapper.ApplicationConfig;
 import io.beanmapper.BeanMapper;
 import io.beanmapper.spring.web.MergedFormMethodArgumentResolver;
-import io.beanmapper.spring.web.converter.StructuredJsonMessageConverter;
 import io.beanmapper.support.JsonDateDeserializer;
 import io.beanmapper.support.JsonDateSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +57,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(new MergedFormMethodArgumentResolver(
-                Collections.singletonList(new StructuredJsonMessageConverter(mappingJackson2HttpMessageConverter)),
+                Collections.singletonList(mappingJackson2HttpMessageConverter),
                 beanMapper,
                 applicationContext
         ));

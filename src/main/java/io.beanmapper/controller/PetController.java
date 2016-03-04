@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 
+/**
+ * Controller to show create, read, update & delete use cases for BeanMapper.
+ * This controller uses BeanMapper-Spring module for making create & update a lot easier.
+ * @see AddressController for same use cases but without BeanMapper-Spring module.
+ */
 @RestController
 @RequestMapping("/pets")
 public class PetController {
@@ -26,7 +31,12 @@ public class PetController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Collection<PetNameAndAgeResult> findAll() {
-        // TODO Wrap BeanMapper config instead of create a new one
+        // TODO use BeanMapper builder to wrap config
+//        return beanMapper.wrapConfig()
+//                .addConverter(new AgeCalculator())
+//                .build()
+//                .map(petService.findAll(), PetNameAndAgeResult.class);
+
         BeanMapper beanMapper = new BeanMapperBuilder().addConverter(new AgeCalculator()).build();
         return beanMapper.map(petService.findAll(), PetNameAndAgeResult.class);
     }
