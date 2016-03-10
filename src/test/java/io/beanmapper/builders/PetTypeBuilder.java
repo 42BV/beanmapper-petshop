@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PetTypeBuilder extends AbstractBuilder<PetType, PetTypeResult> {
+public class PetTypeBuilder extends AbstractBuilder<PetType, PetTypeResult, PetType> {
 
     public PetTypeBuilder() {
         super(null, PetType::new, PetTypeResult::new);

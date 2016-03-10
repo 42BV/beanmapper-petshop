@@ -35,7 +35,7 @@ public class OwnerTest extends ModelTest {
     }
 
     public static Owner createOwner() {
-        return (Owner) new OwnerBuilder()
+        return new OwnerBuilder()
                 .id(ID)
                 .firstName(FIRST_NAME)
                 .prefix(PREFIX)

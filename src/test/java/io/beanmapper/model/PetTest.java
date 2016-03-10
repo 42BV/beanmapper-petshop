@@ -66,7 +66,7 @@ public class PetTest extends ModelTest {
     }
 
     public static Pet createPet() {
-        return (Pet) new PetBuilder()
+        return new PetBuilder()
                 .id(ID)
                 .nickname(NICKNAME)
                 .birthDate(BIRTH_DATE)

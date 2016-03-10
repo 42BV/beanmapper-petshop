@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 
 @Component
-public class OwnerBuilder extends AbstractBuilder<Owner, OwnerResult> {
+public class OwnerBuilder extends AbstractBuilder<Owner, OwnerResult, Owner> {
 
     public OwnerBuilder() {
         super(null, Owner::new);

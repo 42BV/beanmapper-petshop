@@ -38,7 +38,7 @@ public class AddressTest extends ModelTest {
     }
 
     public static Address createAddress() {
-        return (Address) new AddressBuilder()
+        return new AddressBuilder()
                 .id(ID)
                 .street(STREET)
                 .number(NUMBER)

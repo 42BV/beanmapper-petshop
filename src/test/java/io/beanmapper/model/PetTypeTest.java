@@ -22,7 +22,7 @@ public class PetTypeTest extends ModelTest {
     }
 
     public static PetType createPetType() {
-        return (PetType) new PetTypeBuilder()
+        return new PetTypeBuilder()
                 .id(ID)
                 .type(TYPE)
                 .familyName(FAMILY_NAME)

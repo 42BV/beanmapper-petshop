@@ -1,5 +1,6 @@
 package io.beanmapper.builders;
 
+import io.beanmapper.form.PetForm;
 import io.beanmapper.model.Owner;
 import io.beanmapper.model.Pet;
 import io.beanmapper.model.PetType;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 
 @Component
-public class PetBuilder extends AbstractBuilder<Pet, PetResult> {
+public class PetBuilder extends AbstractBuilder<Pet, PetResult, PetForm> {
 
     public PetBuilder() {
         super(null, Pet::new);
