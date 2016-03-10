@@ -12,9 +12,18 @@ import java.util.Set;
 @Component
 public class OwnerBuilder extends AbstractBuilder<Owner> {
 
+    public OwnerBuilder() {
+        super(null, Owner::new);
+    }
+
     @Autowired
     public OwnerBuilder(OwnerRepository ownerRepository) {
         super(ownerRepository, Owner::new);
+    }
+
+    public OwnerBuilder id(Long id) {
+        this.entity.setId(id);
+        return this;
     }
 
     public OwnerBuilder firstName(String firstName) {

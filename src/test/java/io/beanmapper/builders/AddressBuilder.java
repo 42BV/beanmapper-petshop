@@ -8,9 +8,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class AddressBuilder extends AbstractBuilder<Address> {
 
+    public AddressBuilder() {
+        super(null, Address::new);
+    }
+
     @Autowired
     public AddressBuilder(AddressRepository addressRepository) {
         super(addressRepository, Address::new);
+    }
+
+    public AddressBuilder id(Long id) {
+        this.entity.setId(id);
+        return this;
     }
 
     public AddressBuilder street(String street) {

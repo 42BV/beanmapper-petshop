@@ -12,9 +12,18 @@ import java.time.LocalDate;
 @Component
 public class PetBuilder extends AbstractBuilder<Pet> {
 
+    public PetBuilder() {
+        super(null, Pet::new);
+    }
+
     @Autowired
     public PetBuilder(PetRepository petRepository) {
         super(petRepository, Pet::new);
+    }
+
+    public PetBuilder id(Long id) {
+        entity.setId(id);
+        return this;
     }
 
     public PetBuilder nickname(String nickname) {

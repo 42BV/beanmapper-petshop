@@ -8,9 +8,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class PetTypeBuilder extends AbstractBuilder<PetType> {
 
+    public PetTypeBuilder() {
+        super(null, PetType::new);
+    }
+
     @Autowired
     public PetTypeBuilder(PetTypeRepository petTypeRepository) {
         super(petTypeRepository, PetType::new);
+    }
+
+    public PetTypeBuilder id(Long id) {
+        entity.setId(id);
+        return this;
     }
 
     public PetTypeBuilder type(String type) {

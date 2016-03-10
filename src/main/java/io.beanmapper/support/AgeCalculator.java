@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public class AgeCalculator extends SimpleBeanConverter<LocalDate, Integer> {
 
     @Override
-    protected Integer doConvert(LocalDate birthDate) {
+    public Integer doConvert(LocalDate birthDate) {
         return birthDate.until(LocalDate.now()).getYears();
     }
 }
