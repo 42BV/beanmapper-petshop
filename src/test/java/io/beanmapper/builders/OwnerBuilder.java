@@ -4,13 +4,14 @@ import io.beanmapper.model.Address;
 import io.beanmapper.model.Owner;
 import io.beanmapper.model.Pet;
 import io.beanmapper.repository.OwnerRepository;
+import io.beanmapper.result.OwnerResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 @Component
-public class OwnerBuilder extends AbstractBuilder<Owner> {
+public class OwnerBuilder extends AbstractBuilder<Owner, OwnerResult> {
 
     public OwnerBuilder() {
         super(null, Owner::new);

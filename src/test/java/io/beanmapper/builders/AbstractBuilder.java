@@ -4,37 +4,42 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.function.Supplier;
 
-public abstract class AbstractBuilder<E> {
+public abstract class AbstractBuilder<E, R> {
 
     public JpaRepository<E, Long> repository;
     protected E entity;
+    protected R result;
     private Supplier<E> constructor;
+    private Supplier<R> resultConstructor;
 
     public AbstractBuilder(JpaRepository<E, Long> repository, Supplier<E> constructor) {
-        this.repository = repository;
-        this.constructor = constructor;
-        this.entity = makeNewInstance();
+        this(repository, constructor, null);
     }
 
-    protected E init(E entity) {
-        this.entity = makeNewInstance();
-        return entity;
+    public AbstractBuilder(JpaRepository<E, Long> repository, Supplier<E> constructor, Supplier<R> resultConstructor) {
+        this.repository = repository;
+        this.constructor = constructor;
+        this.resultConstructor = resultConstructor;
+        init(null);
     }
 
     public E build() {
         return init(this.entity);
     }
 
-    public E makeNewInstance() {
-        return constructor.get();
+    public R result() {
+        return init(this.result);
     }
 
     public E save() {
         return repository.saveAndFlush(init(this.entity));
     }
 
-    public AbstractBuilder<E> setEntity(E entity) {
-        this.entity = entity;
-        return this;
+    private <X> X init(X object) {
+        this.entity = constructor.get();
+        if(resultConstructor != null) {
+            this.result = resultConstructor.get();
+        }
+        return object;
     }
 }

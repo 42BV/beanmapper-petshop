@@ -48,11 +48,12 @@
         <hibernate.version>5.1.0.Final</hibernate.version>
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <hsqldb.version>2.3.2</hsqldb.version>
-        <junit.version>4.11</junit.version>
+        <junit.version>4.12</junit.version>
         <maven.cobertura.version>2.4</maven.cobertura.version>
         <maven.javadoc.version>2.10.3</maven.javadoc.version>
         <maven-war-plugin.version>2.4</maven-war-plugin.version>
         <maven-assembly-plugin.version>2.4</maven-assembly-plugin.version>
+        <jmockit.version>1.16</jmockit.version>
     </properties>
 
     <dependencies>
@@ -105,9 +106,21 @@
 
         <!-- Testing -->
         <dependency>
+            <groupId>org.jmockit</groupId>
+            <artifactId>jmockit</artifactId>
+            <version>${jmockit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
-            <artifactId>junit-dep</artifactId>
+            <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
 

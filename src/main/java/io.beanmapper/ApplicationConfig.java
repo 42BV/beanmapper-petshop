@@ -45,12 +45,14 @@ public class ApplicationConfig {
 
     @Bean
     public BeanMapper beanMapper() {
-        return new BeanMapperBuilder()
+        BeanMapperBuilder beanMapperBuilder = new BeanMapperBuilder()
                 .addPackagePrefix(ApplicationConfig.class)
                 .setBeanUnproxy(new HibernateAwareBeanUnproxy())
-                .addProxySkipClass(Enum.class)
-                .addConverter(new CustomIdToEntityBeanConverter(applicationContext))
-                .build();
+                .addProxySkipClass(Enum.class);
+        if(applicationContext != null) {
+            beanMapperBuilder.addConverter(new CustomIdToEntityBeanConverter(applicationContext));
+        }
+        return beanMapperBuilder.build();
     }
 
     @Bean

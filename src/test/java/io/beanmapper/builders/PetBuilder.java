@@ -4,13 +4,14 @@ import io.beanmapper.model.Owner;
 import io.beanmapper.model.Pet;
 import io.beanmapper.model.PetType;
 import io.beanmapper.repository.PetRepository;
+import io.beanmapper.result.PetResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
 @Component
-public class PetBuilder extends AbstractBuilder<Pet> {
+public class PetBuilder extends AbstractBuilder<Pet, PetResult> {
 
     public PetBuilder() {
         super(null, Pet::new);

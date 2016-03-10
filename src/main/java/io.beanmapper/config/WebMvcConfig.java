@@ -80,4 +80,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     public DomainClassConverter<FormattingConversionService> domainClassConverter() {
         return new DomainClassConverter<>(mvcConversionService);
     }
+
+    public MappingJackson2HttpMessageConverter getMappingJackson2HttpMessageConverter() {
+        return mappingJackson2HttpMessageConverter;
+    }
 }
