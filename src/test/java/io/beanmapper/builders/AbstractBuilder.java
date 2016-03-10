@@ -20,26 +20,33 @@ public abstract class AbstractBuilder<E, R> {
         this.repository = repository;
         this.constructor = constructor;
         this.resultConstructor = resultConstructor;
-        init(null);
+        init();
     }
 
-    public E build() {
-        return init(this.entity);
-    }
-
-    public R result() {
-        return init(this.result);
+    public Build build() {
+        return init();
     }
 
     public E save() {
-        return repository.saveAndFlush(init(this.entity));
+        return repository.saveAndFlush(init().entity);
     }
 
-    private <X> X init(X object) {
+    private Build<E, R> init() {
+        Build<E, R> build = new Build<>(entity, result);
         this.entity = constructor.get();
         if(resultConstructor != null) {
             this.result = resultConstructor.get();
         }
-        return object;
+        return build;
+    }
+
+    public class Build<BE, BR> {
+        public BE entity;
+        public BR result;
+
+        public Build(BE entity, BR result) {
+            this.entity = entity;
+            this.result = result;
+        }
     }
 }

@@ -22,10 +22,10 @@ public class PetTypeTest extends ModelTest {
     }
 
     public static PetType createPetType() {
-        return new PetTypeBuilder()
+        return (PetType) new PetTypeBuilder()
                 .id(ID)
                 .type(TYPE)
                 .familyName(FAMILY_NAME)
-                .build();
+                .build().entity;
     }
 }

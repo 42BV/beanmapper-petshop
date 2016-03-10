@@ -35,13 +35,13 @@ public class OwnerTest extends ModelTest {
     }
 
     public static Owner createOwner() {
-        return new OwnerBuilder()
+        return (Owner) new OwnerBuilder()
                 .id(ID)
                 .firstName(FIRST_NAME)
                 .prefix(PREFIX)
                 .lastName(LAST_NAME)
                 .address(ADDRESS)
                 .pets(PETS)
-                .build();
+                .build().entity;
     }
 }

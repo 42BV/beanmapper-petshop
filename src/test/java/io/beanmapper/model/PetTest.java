@@ -66,13 +66,13 @@ public class PetTest extends ModelTest {
     }
 
     public static Pet createPet() {
-        return new PetBuilder()
+        return (Pet) new PetBuilder()
                 .id(ID)
                 .nickname(NICKNAME)
                 .birthDate(BIRTH_DATE)
                 .sex(SEX)
                 .type(TYPE)
                 .owner(OWNER)
-                .build();
+                .build().entity;
     }
 }

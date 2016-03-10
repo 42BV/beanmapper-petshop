@@ -38,11 +38,11 @@ public class AddressTest extends ModelTest {
     }
 
     public static Address createAddress() {
-        return new AddressBuilder()
+        return (Address) new AddressBuilder()
                 .id(ID)
                 .street(STREET)
                 .number(NUMBER)
                 .city(CITY)
-                .build();
+                .build().entity;
     }
 }

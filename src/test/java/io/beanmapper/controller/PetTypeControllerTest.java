@@ -1,9 +1,9 @@
 package io.beanmapper.controller;
 
+import io.beanmapper.builders.AbstractBuilder;
 import io.beanmapper.builders.PetTypeBuilder;
 import io.beanmapper.model.PetType;
 import io.beanmapper.repository.PetTypeRepository;
-import io.beanmapper.result.PetTypeResult;
 import io.beanmapper.service.PetTypeService;
 import mockit.Deencapsulation;
 import mockit.Injectable;
@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class PetTypeControllerTest extends AbstractControllerTest {
 
@@ -36,18 +36,16 @@ public class PetTypeControllerTest extends AbstractControllerTest {
 
     @Test
     public void findAllTest() throws Exception {
-        List<PetType> petTypes = new ArrayList<>();
-        petTypes.add(petTypeBuilder.id(1L).type("Dog").familyName("Canidae").build());
-        petTypes.add(petTypeBuilder.id(2L).type("Cat").familyName("Felidae").build());
+        // Data
+        AbstractBuilder.Build petType1 = petTypeBuilder.id(1L).type("Dog").familyName("Canidae").build();
+        AbstractBuilder.Build petType2 = petTypeBuilder.id(2L).type("Cat").familyName("Felidae").build();
 
-        List<PetTypeResult> results = new ArrayList<>();
-        results.add(petTypeBuilder.type("Dog").familyName("Canidae").result());
-        results.add(petTypeBuilder.type("Cat").familyName("Felidae").result());
-        String expectedJsonResponse = objectMapper.writeValueAsString(results);
+        // Expected result
+        String expectedJsonResponse = objectMapper.writeValueAsString(Arrays.asList(petType1.result, petType2.result));
 
         new StrictExpectations() {{
             petTypeService.findAll();
-            result = petTypes;
+            result = new ArrayList<>(Arrays.asList(petType1.entity, petType2.entity));
         }};
 
         RequestBuilder request = MockMvcRequestBuilders.get("/pet-types");
