@@ -20,8 +20,8 @@ public class AddressService {
         return addressRepository.findOne(id);
     }
 
-    public Address save(Address Address) {
-        return addressRepository.save(Address);
+    public Address save(Address address) {
+        return addressRepository.save(address);
     }
 
     public void delete(Long id) {

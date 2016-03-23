@@ -43,7 +43,7 @@ public class PetController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public PetResult findOne(@PathVariable Long id) {
-        return beanMapper.map(petService.findOne(id), PetResult.class);
+        return convert(petService.findOne(id));
     }
 
     @RequestMapping(value = "/type/{name}", method = RequestMethod.GET)
@@ -53,21 +53,25 @@ public class PetController {
 
     @RequestMapping(method = RequestMethod.POST)
     public PetResult create(@MergedForm(value = PetForm.class) Pet pet) {
-        return beanMapper.map(petService.save(pet), PetResult.class);
+        return convert(petService.save(pet));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public PetResult update(@MergedForm(value = PetForm.class, mergeId = "id") Pet pet) {
-        return beanMapper.map(petService.save(pet), PetResult.class);
+        return convert(petService.save(pet));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public PetResult partialUpdate(@MergedForm(value = PetForm.class, patch = true, mergeId = "id") Pet pet) {
-        return beanMapper.map(petService.save(pet), PetResult.class);
+        return convert(petService.save(pet));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable Long id) {
         petService.delete(id);
+    }
+
+    private PetResult convert(Pet pet) {
+        return beanMapper.map(pet, PetResult.class);
     }
 }

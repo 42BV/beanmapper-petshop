@@ -32,20 +32,20 @@ public class AddressController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public AddressResult findOne(@PathVariable Long id) {
-        return beanMapper.map(addressService.findOne(id), AddressResult.class);
+        return convert(addressService.findOne(id));
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public AddressResult create(@RequestBody AddressForm addressForm) {
         Address newAddress = beanMapper.map(addressForm, Address.class);
-        return beanMapper.map(addressService.save(newAddress), AddressResult.class);
+        return convert(addressService.save(newAddress));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public AddressResult update(@PathVariable Long id, @RequestBody AddressForm addressForm) {
         Address oldAddress = addressService.findOne(id);
         Address updatedAddress = beanMapper.map(addressForm, oldAddress);
-        return beanMapper.map(addressService.save(updatedAddress), AddressResult.class);
+        return convert(addressService.save(updatedAddress));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
@@ -58,11 +58,15 @@ public class AddressController {
                 .build()
                 .map(addressForm, oldAddress);
 
-        return beanMapper.map(addressService.save(updatedAddress), AddressResult.class);
+        return convert(addressService.save(updatedAddress));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable Long id) {
         addressService.delete(id);
+    }
+
+    private AddressResult convert(Address address) {
+        return beanMapper.map(address, AddressResult.class);
     }
 }
