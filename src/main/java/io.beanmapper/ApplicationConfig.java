@@ -3,6 +3,7 @@ package io.beanmapper;
 import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.config.WebMvcConfig;
 import io.beanmapper.spring.unproxy.HibernateAwareBeanUnproxy;
+import io.beanmapper.support.AgeCalculator;
 import io.beanmapper.support.CustomIdToEntityBeanConverter;
 import org.hibernate.cfg.ImprovedNamingStrategy;
 import org.hibernate.dialect.Dialect;
@@ -52,6 +53,7 @@ public class ApplicationConfig {
         if(applicationContext != null) {
             beanMapperBuilder.addConverter(new CustomIdToEntityBeanConverter(applicationContext));
         }
+        beanMapperBuilder.addConverter(new AgeCalculator()); // TODO remove when addConverter works for overrideConfig
         return beanMapperBuilder.build();
     }
 

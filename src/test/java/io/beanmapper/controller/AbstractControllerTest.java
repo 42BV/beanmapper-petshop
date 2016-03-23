@@ -5,6 +5,7 @@ import io.beanmapper.ApplicationConfig;
 import io.beanmapper.CustomMockMvcBeanMapper;
 import io.beanmapper.config.WebMvcConfig;
 import io.beanmapper.model.BaseModel;
+import io.beanmapper.spring.web.converter.StructuredJsonMessageConverter;
 import io.beanmapper.spring.web.mockmvc.MockMvcBeanMapper;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.format.support.FormattingConversionService;
@@ -23,7 +24,7 @@ public abstract class AbstractControllerTest {
     protected void initWebClient(Object controller) {
         this.mockMvcBeanMapper = new CustomMockMvcBeanMapper(
                 new FormattingConversionService(),
-                Collections.singletonList(config.getMappingJackson2HttpMessageConverter()),
+                Collections.singletonList(new StructuredJsonMessageConverter(config.getMappingJackson2HttpMessageConverter())),
                 new ApplicationConfig().beanMapper()
         );
 
@@ -32,7 +33,8 @@ public abstract class AbstractControllerTest {
                 .setCustomArgumentResolvers(mockMvcBeanMapper.createHandlerMethodArgumentResolvers())
                 .setConversionService(mockMvcBeanMapper.getConversionService())
                 .build();
-        this.objectMapper = new ObjectMapper();
+
+        this.objectMapper = config.objectMapper();
     }
 
     public void registerRepository(CrudRepository<? extends BaseModel, Long> repository, Class<?> entityClass) {

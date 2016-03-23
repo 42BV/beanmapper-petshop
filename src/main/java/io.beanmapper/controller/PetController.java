@@ -1,14 +1,12 @@
 package io.beanmapper.controller;
 
 import io.beanmapper.BeanMapper;
-import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.form.PetForm;
 import io.beanmapper.model.Pet;
 import io.beanmapper.result.PetNameAndAgeResult;
 import io.beanmapper.result.PetResult;
 import io.beanmapper.service.PetService;
 import io.beanmapper.spring.web.MergedForm;
-import io.beanmapper.support.AgeCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +34,6 @@ public class PetController {
 //                .addConverter(new AgeCalculator())
 //                .build()
 //                .map(petService.findAll(), PetNameAndAgeResult.class);
-
-        BeanMapper beanMapper = new BeanMapperBuilder().addConverter(new AgeCalculator()).build();
         return beanMapper.map(petService.findAll(), PetNameAndAgeResult.class);
     }
 

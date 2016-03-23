@@ -21,12 +21,12 @@ public class PetBuilder extends AbstractBuilder<Pet, PetResult, PetForm> {
     private PetNameAndAgeResult petNameAndAgeResult;
 
     public PetBuilder() {
-        super(null, Pet::new, PetResult::new);
+        super(null, Pet::new, PetResult::new, PetForm::new);
     }
 
     @Autowired
     public PetBuilder(PetRepository petRepository) {
-        super(petRepository, Pet::new, PetResult::new);
+        super(petRepository, Pet::new, PetResult::new, PetForm::new);
     }
 
     public PetBuilder id(Long id) {
@@ -39,6 +39,7 @@ public class PetBuilder extends AbstractBuilder<Pet, PetResult, PetForm> {
         result.nickname = nickname;
         petNameResult.name = nickname;
         petNameAndAgeResult.nickname = nickname;
+        form.nickname = nickname;
         return this;
     }
 
@@ -46,23 +47,27 @@ public class PetBuilder extends AbstractBuilder<Pet, PetResult, PetForm> {
         entity.setBirthDate(birthDate);
         result.birthDate = birthDate;
         petNameAndAgeResult.age = birthDate.until(LocalDate.now()).getYears();
+        form.birthDate = birthDate;
         return this;
     }
 
     public PetBuilder sex(Pet.Sex sex) {
         entity.setSex(sex);
         result.sex = sex.toString();
+        form.sex = sex;
         return this;
     }
 
     public PetBuilder type(PetType petType) {
         entity.setType(petType);
+        form.petTypeId = petType.getId();
         return this;
     }
 
     public PetBuilder type(Build<PetType, PetTypeResult, ?> typeBuild) {
         entity.setType(typeBuild.entity);
         result.type = typeBuild.result;
+        form.petTypeId = typeBuild.entity.getId();
         return this;
     }
 
