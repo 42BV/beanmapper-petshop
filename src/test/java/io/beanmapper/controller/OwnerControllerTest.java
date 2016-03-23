@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 
 public class OwnerControllerTest extends AbstractControllerTest {
 
@@ -49,8 +48,8 @@ public class OwnerControllerTest extends AbstractControllerTest {
         AbstractBuilder.Build dog = petTypeBuilder.type("Dog").familyName("Canidae").build();
         PetBuilder.PetBuild pet1 = petBuilder.id(1L).nickname("Snuf").birthDate(LocalDate.now()).sex(Pet.Sex.MALE).type(dog).build();
         PetBuilder.PetBuild pet2 = petBuilder.id(2L).nickname("Loebas").birthDate(LocalDate.of(2010,6,6)).sex(Pet.Sex.FEMALE).type(dog).build();
-        AbstractBuilder.Build owner1 = ownerBuilder.id(1L).firstName("Henk").prefix("de").lastName("Punt").address(address1).petbuilds(new HashSet<>(Arrays.asList(pet1, pet2))).build();
-        AbstractBuilder.Build owner2 = ownerBuilder.id(2L).firstName("Piet").prefix("").lastName("Boom").address(address2).petbuilds(new HashSet<>()).build();
+        AbstractBuilder.Build owner1 = ownerBuilder.id(1L).firstName("Henk").prefix("de").lastName("Punt").address(address1).petbuilds(Arrays.asList(pet1, pet2)).build();
+        AbstractBuilder.Build owner2 = ownerBuilder.id(2L).firstName("Piet").prefix("").lastName("Boom").address(address2).petbuilds(new ArrayList<>()).build();
 
         // Expected result
         String expectedJsonResponse = objectMapper.writeValueAsString(Arrays.asList(owner1.result, owner2.result));

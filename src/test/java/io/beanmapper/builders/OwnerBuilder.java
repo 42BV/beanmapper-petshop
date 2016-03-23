@@ -9,10 +9,7 @@ import io.beanmapper.result.PetNameResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class OwnerBuilder extends AbstractBuilder<Owner, OwnerResult, Owner> {
@@ -60,8 +57,8 @@ public class OwnerBuilder extends AbstractBuilder<Owner, OwnerResult, Owner> {
         return this;
     }
 
-    public OwnerBuilder petbuilds(Set<PetBuilder.PetBuild> petBuilds) {
-        Set<Pet> pets = new HashSet<>();
+    public OwnerBuilder petbuilds(List<PetBuilder.PetBuild> petBuilds) {
+        Set<Pet> pets = new LinkedHashSet<>();
         List<PetNameResult> petNameResults = new ArrayList<>();
         for(PetBuilder.PetBuild petBuild : petBuilds) {
             pets.add(petBuild.entity);
