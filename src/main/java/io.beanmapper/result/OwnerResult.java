@@ -16,6 +16,8 @@ public class OwnerResult {
     @BeanCollection(elementType = PetNameResult.class, beanCollectionUsage = BeanCollectionUsage.CONSTRUCT)
     public List<PetNameResult> pets;
 
+    public OwnerResult() {}
+
     public OwnerResult(String firstName, String prefix, String lastName) {
         this.fullName = firstName + " " + prefix + " " + lastName;
     }
