@@ -53,7 +53,6 @@ public class ApplicationConfig {
         if(applicationContext != null) {
             beanMapperBuilder.addConverter(new CustomIdToEntityBeanConverter(applicationContext));
         }
-        beanMapperBuilder.addConverter(new AgeCalculator()); // TODO remove when addConverter works for overrideConfig
         return beanMapperBuilder.build();
     }
 

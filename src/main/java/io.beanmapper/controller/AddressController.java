@@ -50,11 +50,10 @@ public class AddressController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public AddressResult partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> inputFields) {
-        // TODO update BeanMapper to get this working
         AddressForm addressForm = objectMapper.convertValue(inputFields, AddressForm.class);
         Address oldAddress = addressService.findOne(id);
         Address updatedAddress = beanMapper.wrapConfig()
-                .setIncludeFields(new ArrayList<>(inputFields.keySet()))
+                .downsizeSource(new ArrayList<>(inputFields.keySet()))
                 .build()
                 .map(addressForm, oldAddress);
 

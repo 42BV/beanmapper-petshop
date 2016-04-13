@@ -7,6 +7,7 @@ import io.beanmapper.result.PetNameAndAgeResult;
 import io.beanmapper.result.PetResult;
 import io.beanmapper.service.PetService;
 import io.beanmapper.spring.web.MergedForm;
+import io.beanmapper.support.AgeCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,12 +30,10 @@ public class PetController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Collection<PetNameAndAgeResult> findAll() {
-        // TODO use BeanMapper builder to wrap config
-//        return beanMapper.wrapConfig()
-//                .addConverter(new AgeCalculator())
-//                .build()
-//                .map(petService.findAll(), PetNameAndAgeResult.class);
-        return beanMapper.map(petService.findAll(), PetNameAndAgeResult.class);
+        return beanMapper.wrapConfig()
+                .addConverter(new AgeCalculator())
+                .build()
+                .map(petService.findAll(), PetNameAndAgeResult.class);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
