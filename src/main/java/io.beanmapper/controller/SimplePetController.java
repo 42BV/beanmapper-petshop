@@ -1,32 +1,31 @@
 package io.beanmapper.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.beanmapper.BeanMapper;
 import io.beanmapper.form.PetForm;
 import io.beanmapper.model.Pet;
 import io.beanmapper.result.PetNameAndAgeResult;
 import io.beanmapper.result.PetResult;
 import io.beanmapper.service.PetService;
-import io.beanmapper.spring.web.MergedForm;
 import io.beanmapper.support.AgeCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Controller to show create, read, update & delete use cases for BeanMapper.
- * This controller uses BeanMapper-Spring module for making create & update a lot easier.
- * @see SimplePetController for same use cases but without BeanMapper-Spring module.
+ * @see PetController for same use cases but using BeanMapper together with BeanMapper-Spring module.
  */
 @RestController
-@RequestMapping("/pets")
-public class PetController {
+@RequestMapping("/pets-simple")
+public class SimplePetController {
 
     @Autowired private BeanMapper beanMapper;
     @Autowired private PetService petService;
+    @Autowired private ObjectMapper objectMapper;
 
     @RequestMapping(method = RequestMethod.GET)
     public Collection<PetNameAndAgeResult> findAll() {
@@ -47,18 +46,28 @@ public class PetController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public PetResult create(@MergedForm(value = PetForm.class) Pet pet) {
-        return convert(petService.save(pet));
+    public PetResult create(@RequestBody PetForm petForm) {
+        Pet newPet = beanMapper.map(petForm, Pet.class);
+        return convert(petService.save(newPet));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public PetResult update(@MergedForm(value = PetForm.class, mergeId = "id") Pet pet) {
-        return convert(petService.save(pet));
+    public PetResult update(@PathVariable Long id, @RequestBody PetForm petForm) {
+        Pet oldPet = petService.findOne(id);
+        Pet updatedPet = beanMapper.map(petForm, oldPet);
+        return convert(petService.save(updatedPet));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
-    public PetResult partialUpdate(@MergedForm(value = PetForm.class, patch = true, mergeId = "id") Pet pet) {
-        return convert(petService.save(pet));
+    public PetResult partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> inputFields) {
+        PetForm petForm = objectMapper.convertValue(inputFields, PetForm.class);
+        Pet oldPet = petService.findOne(id);
+        Pet updatedPet = beanMapper.wrapConfig()
+                .downsizeSource(new ArrayList<>(inputFields.keySet()))
+                .build()
+                .map(petForm, oldPet);
+
+        return convert(petService.save(updatedPet));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

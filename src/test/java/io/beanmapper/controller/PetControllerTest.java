@@ -11,8 +11,11 @@ import io.beanmapper.repository.PetTypeRepository;
 import io.beanmapper.service.PetService;
 import mockit.*;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.theories.DataPoint;
+import org.junit.experimental.theories.Theories;
+import org.junit.experimental.theories.Theory;
+import org.junit.runner.RunWith;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -24,8 +27,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+@RunWith(Theories.class)
 public class PetControllerTest extends AbstractControllerTest {
 
+    @DataPoint public static String PetControllerPath = "/pets";
+    @DataPoint public static String SimplePetControllerPath = "/pets-simple";
     @Injectable private PetService petService;
     @Mocked private PetRepository petRepository;
     @Mocked private PetTypeRepository petTypeRepository;
@@ -34,18 +40,26 @@ public class PetControllerTest extends AbstractControllerTest {
     private OwnerBuilder ownerBuilder = new OwnerBuilder();
     private AddressBuilder addressBuilder = new AddressBuilder();
 
-    @Before
-    public void setup() {
-        PetController petController = new PetController();
-        initWebClient(petController);
-        Deencapsulation.setField(petController, petService);
-        Deencapsulation.setField(petController, mockMvcBeanMapper.getBeanMapper());
+    public void setup(String path) {
+        Object controller;
+        if(path.equals(PetControllerPath)) {
+            controller = new PetController();
+        } else {
+            controller = new SimplePetController();
+        }
+        initWebClient(controller);
+        Deencapsulation.setField(controller, petService);
+        Deencapsulation.setField(controller, mockMvcBeanMapper.getBeanMapper());
+        if(controller instanceof SimplePetController)
+            Deencapsulation.setField(controller, objectMapper);
         registerRepository(petRepository, Pet.class);
         registerRepository(petRepository, PetType.class);
     }
 
     @Test
-    public void findAllTest() throws Exception {
+    @Theory
+    public void findAllTest(String path) throws Exception {
+        setup(path);
         // Data
         PetBuilder.PetBuild pet1 = createPet("Snuf", LocalDate.now(), Pet.Sex.MALE);
         PetBuilder.PetBuild pet2 = createPet("Loebas", LocalDate.of(2010,6,6), Pet.Sex.FEMALE);
@@ -58,7 +72,7 @@ public class PetControllerTest extends AbstractControllerTest {
             result = new ArrayList<>(Arrays.asList(pet1.entity, pet2.entity));
         }};
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/pets");
+        RequestBuilder request = MockMvcRequestBuilders.get(path);
         webClient.perform(request)
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -66,7 +80,9 @@ public class PetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void findOneTest() throws Exception {
+    @Theory
+    public void findOneTest(String path) throws Exception {
+        setup(path);
         // Data
         PetBuilder.PetBuild pet = createPet("Snuf", LocalDate.now(), Pet.Sex.MALE);
         // Expected result
@@ -77,7 +93,7 @@ public class PetControllerTest extends AbstractControllerTest {
             result = pet.entity;
         }};
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/pets/1");
+        RequestBuilder request = MockMvcRequestBuilders.get(path+"/1");
         webClient.perform(request)
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -85,7 +101,9 @@ public class PetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void findByTypeTest() throws Exception {
+    @Theory
+    public void findByTypeTest(String path) throws Exception {
+        setup(path);
         // Data
         PetBuilder.PetBuild pet = createPet("Snuf", LocalDate.now(), Pet.Sex.MALE);
         // Expected result
@@ -96,7 +114,7 @@ public class PetControllerTest extends AbstractControllerTest {
             result = new ArrayList<>(Collections.singletonList(pet.entity));
         }};
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/pets/type/dog");
+        RequestBuilder request = MockMvcRequestBuilders.get(path+"/type/dog");
         webClient.perform(request)
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -104,7 +122,9 @@ public class PetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void createTest() throws Exception {
+    @Theory
+    public void createTest(String path) throws Exception {
+        setup(path);
         // Data
         PetBuilder.PetBuild pet = createPet("Snuf", LocalDate.now(), Pet.Sex.MALE);
         // Expected result
@@ -115,7 +135,7 @@ public class PetControllerTest extends AbstractControllerTest {
             result = pet.entity;
         }};
 
-        RequestBuilder request = MockMvcRequestBuilders.post("/pets")
+        RequestBuilder request = MockMvcRequestBuilders.post(path)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(pet.form));
 
@@ -138,22 +158,34 @@ public class PetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void updateTest() throws Exception {
+    @Theory
+    public void updateTest(String path) throws Exception {
+        setup(path);
         // Data
         PetBuilder.PetBuild oldPet = createPet("Snuf", LocalDate.now(), Pet.Sex.MALE);
         PetBuilder.PetBuild newPet = createPet("Kees", LocalDate.of(2010,6,6), Pet.Sex.FEMALE);
         // Expected result
         String expectedJsonResponse = objectMapper.writeValueAsString(newPet.result);
 
-        new Expectations() {{
-            petRepository.findOne(1L);
-            result = oldPet.entity;
+        if(path.equals(PetControllerPath)) {
+            new Expectations() {{
+                petRepository.findOne(1L);
+                result = oldPet.entity;
 
-            petService.save((Pet) any);
-            result = newPet.entity;
-        }};
+                petService.save((Pet) any);
+                result = newPet.entity;
+            }};
+        } else {
+            new Expectations() {{
+                petService.findOne(1L);
+                result = oldPet.entity;
 
-        RequestBuilder request = MockMvcRequestBuilders.put("/pets/1")
+                petService.save((Pet) any);
+                result = newPet.entity;
+            }};
+        }
+
+        RequestBuilder request = MockMvcRequestBuilders.put(path+"/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(newPet.form));
 
@@ -170,7 +202,9 @@ public class PetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void partialUpdateTest() throws Exception {
+    @Theory
+    public void partialUpdateTest(String path) throws Exception {
+        setup(path);
         // Data
         PetBuilder.PetBuild oldPet = createPet("Snuf", LocalDate.of(2010,6,6), Pet.Sex.MALE);
         PetBuilder.PetBuild newPet = createPet("Kees", LocalDate.of(2010,6,6), Pet.Sex.MALE);
@@ -178,15 +212,25 @@ public class PetControllerTest extends AbstractControllerTest {
         String form = "{\"nickname\":\"Kees\"}";
         String expectedJsonResponse = objectMapper.writeValueAsString(newPet.result);
 
-        new Expectations() {{
-            petRepository.findOne(1L);
-            result = oldPet.entity;
+        if(path.equals(PetControllerPath)) {
+            new Expectations() {{
+                petRepository.findOne(1L);
+                result = oldPet.entity;
 
-            petService.save((Pet) any);
-            result = newPet.entity;
-        }};
+                petService.save((Pet) any);
+                result = newPet.entity;
+            }};
+        } else {
+            new Expectations() {{
+                petService.findOne(1L);
+                result = oldPet.entity;
 
-        RequestBuilder request = MockMvcRequestBuilders.patch("/pets/1")
+                petService.save((Pet) any);
+                result = newPet.entity;
+            }};
+        }
+
+        RequestBuilder request = MockMvcRequestBuilders.patch(path+"/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(form);
 
@@ -203,8 +247,10 @@ public class PetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void deleteTest() throws Exception {
-        RequestBuilder request = MockMvcRequestBuilders.delete("/pets/1");
+    @Theory
+    public void deleteTest(String path) throws Exception {
+        setup(path);
+        RequestBuilder request = MockMvcRequestBuilders.delete(path+"/1");
         webClient.perform(request)
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
