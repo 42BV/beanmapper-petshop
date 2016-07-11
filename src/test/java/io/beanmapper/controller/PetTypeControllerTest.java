@@ -53,4 +53,23 @@ public class PetTypeControllerTest extends AbstractControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(mvcResult -> Assert.assertEquals(expectedJsonResponse, mvcResult.getResponse().getContentAsString()));
     }
+
+    @Test
+    public void findOneTest() throws Exception {
+        // Data
+        AbstractBuilder.Build petType = petTypeBuilder.id(2L).type("Cat").familyName("Felidae").build();
+
+        // Expected result
+        String expectedJsonResponse = "{\"type\":\"Cat\"}";
+
+        new StrictExpectations() {{
+            petTypeService.findOne(2L);
+            result = petType.entity;
+        }};
+
+        RequestBuilder request = MockMvcRequestBuilders.get("/pet-types/2");
+        webClient.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(mvcResult -> Assert.assertEquals(expectedJsonResponse, mvcResult.getResponse().getContentAsString()));
+    }
 }

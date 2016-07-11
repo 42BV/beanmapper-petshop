@@ -15,4 +15,8 @@ public class PetTypeService {
     public List<PetType> findAll() {
         return petTypeRepository.findAll();
     }
+
+    public PetType findOne(Long id) {
+        return petTypeRepository.findOne(id);
+    }
 }
