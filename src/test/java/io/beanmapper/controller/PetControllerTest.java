@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static org.junit.Assert.assertEquals;
+
 @RunWith(Theories.class)
 public class PetControllerTest extends AbstractControllerTest {
 
@@ -76,7 +78,7 @@ public class PetControllerTest extends AbstractControllerTest {
         webClient.perform(request)
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(mvcResult -> Assert.assertEquals(expectedJsonResponse, mvcResult.getResponse().getContentAsString()));
+                .andExpect(mvcResult -> assertEquals(expectedJsonResponse, mvcResult.getResponse().getContentAsString()));
     }
 
     @Test
@@ -97,7 +99,7 @@ public class PetControllerTest extends AbstractControllerTest {
         webClient.perform(request)
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(mvcResult -> Assert.assertEquals(expectedJsonResponse, mvcResult.getResponse().getContentAsString()));
+                .andExpect(mvcResult -> assertEquals(expectedJsonResponse, mvcResult.getResponse().getContentAsString()));
     }
 
     @Test
@@ -118,7 +120,7 @@ public class PetControllerTest extends AbstractControllerTest {
         webClient.perform(request)
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(mvcResult -> Assert.assertEquals(expectedJsonResponse, mvcResult.getResponse().getContentAsString()));
+                .andExpect(mvcResult -> assertEquals(expectedJsonResponse, mvcResult.getResponse().getContentAsString()));
     }
 
     @Test
@@ -142,17 +144,17 @@ public class PetControllerTest extends AbstractControllerTest {
         webClient.perform(request)
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(mvcResult -> Assert.assertEquals(expectedJsonResponse, mvcResult.getResponse().getContentAsString()));
+                .andExpect(mvcResult -> assertEquals(expectedJsonResponse, mvcResult.getResponse().getContentAsString()));
 
         new Verifications() {{
             PetForm expectedPet = pet.form;
             Pet capturePet;
             petService.save(capturePet = withCapture());
             Assert.assertNull(capturePet.getId());
-            Assert.assertEquals(expectedPet.nickname, capturePet.getNickname());
-            Assert.assertEquals(expectedPet.birthDate, capturePet.getBirthDate());
-            Assert.assertEquals(expectedPet.sex, capturePet.getSex());
-            Assert.assertEquals(expectedPet.petTypeId, capturePet.getType().getId());
+            assertEquals(expectedPet.nickname, capturePet.getNickname());
+            assertEquals(expectedPet.birthDate, capturePet.getBirthDate());
+            assertEquals(expectedPet.sex, capturePet.getSex());
+            assertEquals(expectedPet.petTypeId, capturePet.getType().getId());
             Assert.assertNull(capturePet.getOwner());
         }};
     }
@@ -192,7 +194,7 @@ public class PetControllerTest extends AbstractControllerTest {
         webClient.perform(request)
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(mvcResult -> Assert.assertEquals(expectedJsonResponse, mvcResult.getResponse().getContentAsString()));
+                .andExpect(mvcResult -> assertEquals(expectedJsonResponse, mvcResult.getResponse().getContentAsString()));
 
         new Verifications() {{
             Pet capturePet;
@@ -237,7 +239,7 @@ public class PetControllerTest extends AbstractControllerTest {
         webClient.perform(request)
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(mvcResult -> Assert.assertEquals(expectedJsonResponse, mvcResult.getResponse().getContentAsString()));
+                .andExpect(mvcResult -> assertEquals(expectedJsonResponse, mvcResult.getResponse().getContentAsString()));
 
         new Verifications() {{
             Pet capturePet;
@@ -256,20 +258,39 @@ public class PetControllerTest extends AbstractControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    public void idToPetTest() {
+        setup(PetControllerPath);
+        Long id = 1L;
+        Pet pet = new Pet();
+        pet.setNickname("Snuf");
+        pet.setBirthDate(LocalDate.of(2016,1,1));
+
+        new Expectations() {{
+            petRepository.findOne(id);
+            result = pet;
+        }};
+
+
+        Pet petFromId = mockMvcBeanMapper.getBeanMapper().map(id, Pet.class, true);
+        assertEquals("Snuf", petFromId.getNickname());
+        assertEquals(LocalDate.of(2016,1,1), petFromId.getBirthDate());
+    }
+
     private void compareEntity(Pet expectedPet, Pet capturePet) {
-        Assert.assertEquals(expectedPet.getId(), capturePet.getId());
-        Assert.assertEquals(expectedPet.getNickname(), capturePet.getNickname());
-        Assert.assertEquals(expectedPet.getBirthDate(), capturePet.getBirthDate());
-        Assert.assertEquals(expectedPet.getSex(), capturePet.getSex());
+        assertEquals(expectedPet.getId(), capturePet.getId());
+        assertEquals(expectedPet.getNickname(), capturePet.getNickname());
+        assertEquals(expectedPet.getBirthDate(), capturePet.getBirthDate());
+        assertEquals(expectedPet.getSex(), capturePet.getSex());
         // Type
-        Assert.assertEquals(expectedPet.getType().getId(), capturePet.getType().getId());
-        Assert.assertEquals(expectedPet.getType().getType(), capturePet.getType().getType());
-        Assert.assertEquals(expectedPet.getType().getFamilyName(), capturePet.getType().getFamilyName());
+        assertEquals(expectedPet.getType().getId(), capturePet.getType().getId());
+        assertEquals(expectedPet.getType().getType(), capturePet.getType().getType());
+        assertEquals(expectedPet.getType().getFamilyName(), capturePet.getType().getFamilyName());
         // Owner
-        Assert.assertEquals(expectedPet.getOwner().getId(), capturePet.getOwner().getId());
-        Assert.assertEquals(expectedPet.getOwner().getFirstName(), capturePet.getOwner().getFirstName());
-        Assert.assertEquals(expectedPet.getOwner().getPrefix(), capturePet.getOwner().getPrefix());
-        Assert.assertEquals(expectedPet.getOwner().getLastName(), capturePet.getOwner().getLastName());
+        assertEquals(expectedPet.getOwner().getId(), capturePet.getOwner().getId());
+        assertEquals(expectedPet.getOwner().getFirstName(), capturePet.getOwner().getFirstName());
+        assertEquals(expectedPet.getOwner().getPrefix(), capturePet.getOwner().getPrefix());
+        assertEquals(expectedPet.getOwner().getLastName(), capturePet.getOwner().getLastName());
     }
 
     private PetBuilder.PetBuild createPet(String nickname, LocalDate birthDate, Pet.Sex sex) {
