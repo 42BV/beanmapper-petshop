@@ -2,9 +2,8 @@ package io.beanmapper;
 
 import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.config.WebMvcConfig;
+import io.beanmapper.spring.converter.IdToEntityBeanConverter;
 import io.beanmapper.spring.unproxy.HibernateAwareBeanUnproxy;
-import io.beanmapper.support.AgeCalculator;
-import io.beanmapper.support.CustomIdToEntityBeanConverter;
 import org.hibernate.cfg.ImprovedNamingStrategy;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.jpa.HibernatePersistenceProvider;
@@ -51,7 +50,7 @@ public class ApplicationConfig {
                 .setBeanUnproxy(new HibernateAwareBeanUnproxy())
                 .addProxySkipClass(Enum.class);
         if(applicationContext != null) {
-            beanMapperBuilder.addConverter(new CustomIdToEntityBeanConverter(applicationContext));
+            beanMapperBuilder.addConverter(new IdToEntityBeanConverter(applicationContext));
         }
         return beanMapperBuilder.build();
     }
